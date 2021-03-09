@@ -8,7 +8,7 @@ import java.util.Arrays;
  * @Date: 2021/3/8
  * @Version 1.0
  */
-public class Sheep implements Cloneable {
+public class Sheep implements Cloneable, Serializable {
     private String name;
     private int age;
     private int[] color;
@@ -54,6 +54,34 @@ public class Sheep implements Cloneable {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+        // 创建字节数组流和对象流
+        ByteArrayOutputStream bos = null;
+        ByteArrayInputStream bis = null;
+        ObjectOutputStream oos = null;
+        ObjectInputStream ois = null;
+        try {
+            // 序列化
+            bos = new ByteArrayOutputStream();  // 数据即将写入的字节数组输出流
+            oos = new ObjectOutputStream(bos);  // 创建一个写入bos的对象输出流
+            oos.writeObject(this);              // 将this对象写入oos
+            // 反序列化
+            bis = new ByteArrayInputStream(bos.toByteArray());  // 创建一个 bis ，使用 bos作为缓冲区
+            ois = new ObjectInputStream(bis);   // 创建一个从bis读取的对象输入流
+            return ois.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            // 关闭流
+            try {
+                ois.close();
+                bis.close();
+                oos.close();
+                bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }
