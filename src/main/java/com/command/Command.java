@@ -6,4 +6,9 @@ package com.command;
  * @Version 1.0
  */
 public interface Command {
+
+    void execute();
+
+    void undo();
+
 }
